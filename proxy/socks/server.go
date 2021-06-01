@@ -121,7 +121,7 @@ func (s *Server) processTCP(ctx context.Context, conn internet.Connection, dispa
 
 	if request.Command == protocol.RequestCommandTCP {
 		dest := request.Destination()
-		newError("TCP Connect request to ", dest).WriteToLog(session.ExportIDToError(ctx))
+// 		newError("TCP Connect request to ", dest).WriteToLog(session.ExportIDToError(ctx))
 		if inbound != nil && inbound.Source.IsValid() {
 			ctx = log.ContextWithAccessMessage(ctx, &log.AccessMessage{
 				From:   inbound.Source,
