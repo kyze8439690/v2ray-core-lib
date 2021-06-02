@@ -416,15 +416,6 @@ func ClientHandshake(request *protocol.RequestHeader, reader io.Reader, writer i
 	defer b.Release()
 
 	common.Must2(b.Write([]byte{socks5Version, 0x01, authByte}))
-	if authByte == authPassword {
-		account := request.User.Account.(*Account)
-
-		common.Must(b.WriteByte(0x01))
-		common.Must(b.WriteByte(byte(len(account.Username))))
-		common.Must2(b.WriteString(account.Username))
-		common.Must(b.WriteByte(byte(len(account.Password))))
-		common.Must2(b.WriteString(account.Password))
-	}
 
 	if err := buf.WriteAllBytes(writer, b.Bytes()); err != nil {
 		return nil, err
@@ -441,6 +432,21 @@ func ClientHandshake(request *protocol.RequestHeader, reader io.Reader, writer i
 	if b.Byte(1) != authByte {
 		return nil, newError("auth method not supported.").AtWarning()
 	}
+
+	if authByte == authPassword {
+		account := request.User.Account.(*Account)
+
+        b.Clear()
+		common.Must(b.WriteByte(0x01))
+		common.Must(b.WriteByte(byte(len(account.Username))))
+		common.Must2(b.WriteString(account.Username))
+		common.Must(b.WriteByte(byte(len(account.Password))))
+		common.Must2(b.WriteString(account.Password))
+	}
+
+	if err := buf.WriteAllBytes(writer, b.Bytes()); err != nil {
+        return nil, err
+    }
 
 	if authByte == authPassword {
 		b.Clear()
