@@ -62,7 +62,7 @@ func ListenTCP(ctx context.Context, address net.Address, port net.Port, streamSe
 		if err != nil {
 			return nil, newError("failed to listen TCP on ", address, ":", port).Base(err)
 		}
-		newError("listening TCP on ", address, ":", port).WriteToLog(session.ExportIDToError(ctx))
+// 		newError("listening TCP on ", address, ":", port).WriteToLog(session.ExportIDToError(ctx))
 	}
 
 	if streamSettings.SocketSettings != nil && streamSettings.SocketSettings.AcceptProxyProtocol {
