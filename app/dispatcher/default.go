@@ -6,7 +6,7 @@ package dispatcher
 
 import (
 	"context"
-	"strings"
+// 	"strings"
 	"sync"
 	"time"
 
@@ -15,7 +15,7 @@ import (
 	"github.com/v2fly/v2ray-core/v4/common/buf"
 	"github.com/v2fly/v2ray-core/v4/common/log"
 	"github.com/v2fly/v2ray-core/v4/common/net"
-	"github.com/v2fly/v2ray-core/v4/common/protocol"
+// 	"github.com/v2fly/v2ray-core/v4/common/protocol"
 	"github.com/v2fly/v2ray-core/v4/common/session"
 	"github.com/v2fly/v2ray-core/v4/features/outbound"
 	"github.com/v2fly/v2ray-core/v4/features/policy"
@@ -144,54 +144,54 @@ func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *tran
 		Writer: downlinkWriter,
 	}
 
-	sessionInbound := session.InboundFromContext(ctx)
-	var user *protocol.MemoryUser
-	if sessionInbound != nil {
-		user = sessionInbound.User
-	}
+// 	sessionInbound := session.InboundFromContext(ctx)
+// 	var user *protocol.MemoryUser
+// 	if sessionInbound != nil {
+// 		user = sessionInbound.User
+// 	}
 
-	if user != nil && len(user.Email) > 0 {
-		p := d.policy.ForLevel(user.Level)
-		if p.Stats.UserUplink {
-			name := "user>>>" + user.Email + ">>>traffic>>>uplink"
-			if c, _ := stats.GetOrRegisterCounter(d.stats, name); c != nil {
-				inboundLink.Writer = &SizeStatWriter{
-					Counter: c,
-					Writer:  inboundLink.Writer,
-				}
-			}
-		}
-		if p.Stats.UserDownlink {
-			name := "user>>>" + user.Email + ">>>traffic>>>downlink"
-			if c, _ := stats.GetOrRegisterCounter(d.stats, name); c != nil {
-				outboundLink.Writer = &SizeStatWriter{
-					Counter: c,
-					Writer:  outboundLink.Writer,
-				}
-			}
-		}
-	}
+// 	if user != nil && len(user.Email) > 0 {
+// 		p := d.policy.ForLevel(user.Level)
+// 		if p.Stats.UserUplink {
+// 			name := "user>>>" + user.Email + ">>>traffic>>>uplink"
+// 			if c, _ := stats.GetOrRegisterCounter(d.stats, name); c != nil {
+// 				inboundLink.Writer = &SizeStatWriter{
+// 					Counter: c,
+// 					Writer:  inboundLink.Writer,
+// 				}
+// 			}
+// 		}
+// 		if p.Stats.UserDownlink {
+// 			name := "user>>>" + user.Email + ">>>traffic>>>downlink"
+// 			if c, _ := stats.GetOrRegisterCounter(d.stats, name); c != nil {
+// 				outboundLink.Writer = &SizeStatWriter{
+// 					Counter: c,
+// 					Writer:  outboundLink.Writer,
+// 				}
+// 			}
+// 		}
+// 	}
 
 	return inboundLink, outboundLink
 }
 
-func shouldOverride(result SniffResult, domainOverride []string) bool {
-	protocolString := result.Protocol()
-	if resComp, ok := result.(SnifferResultComposite); ok {
-		protocolString = resComp.ProtocolForDomainResult()
-	}
-	for _, p := range domainOverride {
-		if strings.HasPrefix(protocolString, p) {
-			return true
-		}
-		if resultSubset, ok := result.(SnifferIsProtoSubsetOf); ok {
-			if resultSubset.IsProtoSubsetOf(p) {
-				return true
-			}
-		}
-	}
-	return false
-}
+// func shouldOverride(result SniffResult, domainOverride []string) bool {
+// 	protocolString := result.Protocol()
+// 	if resComp, ok := result.(SnifferResultComposite); ok {
+// 		protocolString = resComp.ProtocolForDomainResult()
+// 	}
+// 	for _, p := range domainOverride {
+// 		if strings.HasPrefix(protocolString, p) {
+// 			return true
+// 		}
+// 		if resultSubset, ok := result.(SnifferIsProtoSubsetOf); ok {
+// 			if resultSubset.IsProtoSubsetOf(p) {
+// 				return true
+// 			}
+// 		}
+// 	}
+// 	return false
+// }
 
 // Dispatch implements routing.Dispatcher.
 func (d *DefaultDispatcher) Dispatch(ctx context.Context, destination net.Destination) (*transport.Link, error) {
@@ -215,16 +215,16 @@ func (d *DefaultDispatcher) Dispatch(ctx context.Context, destination net.Destin
 		go d.routedDispatch(ctx, outbound, destination)
 	case destination.Network != net.Network_TCP:
 		// Only metadata sniff will be used for non tcp connection
-		result, err := sniffer(ctx, nil, true)
-		if err == nil {
-			content.Protocol = result.Protocol()
-			if shouldOverride(result, sniffingRequest.OverrideDestinationForProtocol) {
-				domain := result.Domain()
-				newError("sniffed domain: ", domain).WriteToLog(session.ExportIDToError(ctx))
-				destination.Address = net.ParseAddress(domain)
-				ob.Target = destination
-			}
-		}
+// 		result, err := sniffer(ctx, nil, true)
+// 		if err == nil {
+// 			content.Protocol = result.Protocol()
+// 			if shouldOverride(result, sniffingRequest.OverrideDestinationForProtocol) {
+// 				domain := result.Domain()
+// 				newError("sniffed domain: ", domain).WriteToLog(session.ExportIDToError(ctx))
+// 				destination.Address = net.ParseAddress(domain)
+// 				ob.Target = destination
+// 			}
+// 		}
 		go d.routedDispatch(ctx, outbound, destination)
 	default:
 		go func() {
@@ -232,67 +232,67 @@ func (d *DefaultDispatcher) Dispatch(ctx context.Context, destination net.Destin
 				reader: outbound.Reader.(*pipe.Reader),
 			}
 			outbound.Reader = cReader
-			result, err := sniffer(ctx, cReader, sniffingRequest.MetadataOnly)
-			if err == nil {
-				content.Protocol = result.Protocol()
-			}
-			if err == nil && shouldOverride(result, sniffingRequest.OverrideDestinationForProtocol) {
-				domain := result.Domain()
-				newError("sniffed domain: ", domain).WriteToLog(session.ExportIDToError(ctx))
-				destination.Address = net.ParseAddress(domain)
-				ob.Target = destination
-			}
+// 			result, err := sniffer(ctx, cReader, sniffingRequest.MetadataOnly)
+// 			if err == nil {
+// 				content.Protocol = result.Protocol()
+// 			}
+// 			if err == nil && shouldOverride(result, sniffingRequest.OverrideDestinationForProtocol) {
+// 				domain := result.Domain()
+// 				newError("sniffed domain: ", domain).WriteToLog(session.ExportIDToError(ctx))
+// 				destination.Address = net.ParseAddress(domain)
+// 				ob.Target = destination
+// 			}
 			d.routedDispatch(ctx, outbound, destination)
 		}()
 	}
 	return inbound, nil
 }
 
-func sniffer(ctx context.Context, cReader *cachedReader, metadataOnly bool) (SniffResult, error) {
-	payload := buf.New()
-	defer payload.Release()
-
-	sniffer := NewSniffer(ctx)
-
-	metaresult, metadataErr := sniffer.SniffMetadata(ctx)
-
-	if metadataOnly {
-		return metaresult, metadataErr
-	}
-
-	contentResult, contentErr := func() (SniffResult, error) {
-		totalAttempt := 0
-		for {
-			select {
-			case <-ctx.Done():
-				return nil, ctx.Err()
-			default:
-				totalAttempt++
-				if totalAttempt > 2 {
-					return nil, errSniffingTimeout
-				}
-
-				cReader.Cache(payload)
-				if !payload.IsEmpty() {
-					result, err := sniffer.Sniff(ctx, payload.Bytes())
-					if err != common.ErrNoClue {
-						return result, err
-					}
-				}
-				if payload.IsFull() {
-					return nil, errUnknownContent
-				}
-			}
-		}
-	}()
-	if contentErr != nil && metadataErr == nil {
-		return metaresult, nil
-	}
-	if contentErr == nil && metadataErr == nil {
-		return CompositeResult(metaresult, contentResult), nil
-	}
-	return contentResult, contentErr
-}
+// func sniffer(ctx context.Context, cReader *cachedReader, metadataOnly bool) (SniffResult, error) {
+// 	payload := buf.New()
+// 	defer payload.Release()
+//
+// 	sniffer := NewSniffer(ctx)
+//
+// 	metaresult, metadataErr := sniffer.SniffMetadata(ctx)
+//
+// 	if metadataOnly {
+// 		return metaresult, metadataErr
+// 	}
+//
+// 	contentResult, contentErr := func() (SniffResult, error) {
+// 		totalAttempt := 0
+// 		for {
+// 			select {
+// 			case <-ctx.Done():
+// 				return nil, ctx.Err()
+// 			default:
+// 				totalAttempt++
+// 				if totalAttempt > 2 {
+// 					return nil, errSniffingTimeout
+// 				}
+//
+// 				cReader.Cache(payload)
+// 				if !payload.IsEmpty() {
+// 					result, err := sniffer.Sniff(ctx, payload.Bytes())
+// 					if err != common.ErrNoClue {
+// 						return result, err
+// 					}
+// 				}
+// 				if payload.IsFull() {
+// 					return nil, errUnknownContent
+// 				}
+// 			}
+// 		}
+// 	}()
+// 	if contentErr != nil && metadataErr == nil {
+// 		return metaresult, nil
+// 	}
+// 	if contentErr == nil && metadataErr == nil {
+// 		return CompositeResult(metaresult, contentResult), nil
+// 	}
+// 	return contentResult, contentErr
+// }
 
 func (d *DefaultDispatcher) routedDispatch(ctx context.Context, link *transport.Link, destination net.Destination) {
 	var handler outbound.Handler
