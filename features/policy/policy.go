@@ -22,12 +22,12 @@ type Timeout struct {
 }
 
 // Stats contains settings for stats counters.
-type Stats struct {
-	// Whether or not to enable stat counter for user uplink traffic.
-	UserUplink bool
-	// Whether or not to enable stat counter for user downlink traffic.
-	UserDownlink bool
-}
+// type Stats struct {
+// 	// Whether or not to enable stat counter for user uplink traffic.
+// 	UserUplink bool
+// 	// Whether or not to enable stat counter for user downlink traffic.
+// 	UserDownlink bool
+// }
 
 // Buffer contains settings for internal buffer.
 type Buffer struct {
@@ -36,27 +36,27 @@ type Buffer struct {
 }
 
 // SystemStats contains stat policy settings on system level.
-type SystemStats struct {
-	// Whether or not to enable stat counter for uplink traffic in inbound handlers.
-	InboundUplink bool
-	// Whether or not to enable stat counter for downlink traffic in inbound handlers.
-	InboundDownlink bool
-	// Whether or not to enable stat counter for uplink traffic in outbound handlers.
-	OutboundUplink bool
-	// Whether or not to enable stat counter for downlink traffic in outbound handlers.
-	OutboundDownlink bool
-}
+// type SystemStats struct {
+// 	// Whether or not to enable stat counter for uplink traffic in inbound handlers.
+// 	InboundUplink bool
+// 	// Whether or not to enable stat counter for downlink traffic in inbound handlers.
+// 	InboundDownlink bool
+// 	// Whether or not to enable stat counter for uplink traffic in outbound handlers.
+// 	OutboundUplink bool
+// 	// Whether or not to enable stat counter for downlink traffic in outbound handlers.
+// 	OutboundDownlink bool
+// }
 
 // System contains policy settings at system level.
 type System struct {
-	Stats  SystemStats
+// 	Stats  SystemStats
 	Buffer Buffer
 }
 
 // Session is session based settings for controlling V2Ray requests. It contains various settings (or limits) that may differ for different users in the context.
 type Session struct {
 	Timeouts Timeout // Timeout settings
-	Stats    Stats
+// 	Stats    Stats
 	Buffer   Buffer
 }
 
@@ -124,10 +124,10 @@ func SessionDefault() Session {
 			UplinkOnly:     time.Second * 1,
 			DownlinkOnly:   time.Second * 1,
 		},
-		Stats: Stats{
-			UserUplink:   false,
-			UserDownlink: false,
-		},
+// 		Stats: Stats{
+// 			UserUplink:   false,
+// 			UserDownlink: false,
+// 		},
 		Buffer: defaultBufferPolicy(),
 	}
 }
