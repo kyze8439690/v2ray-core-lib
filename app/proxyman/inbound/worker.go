@@ -6,7 +6,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/v2fly/v2ray-core/v4/app/proxyman"
+// 	"github.com/v2fly/v2ray-core/v4/app/proxyman"
 	"github.com/v2fly/v2ray-core/v4/common"
 	"github.com/v2fly/v2ray-core/v4/common/buf"
 	"github.com/v2fly/v2ray-core/v4/common/net"
@@ -15,7 +15,7 @@ import (
 	"github.com/v2fly/v2ray-core/v4/common/signal/done"
 	"github.com/v2fly/v2ray-core/v4/common/task"
 	"github.com/v2fly/v2ray-core/v4/features/routing"
-	"github.com/v2fly/v2ray-core/v4/features/stats"
+// 	"github.com/v2fly/v2ray-core/v4/features/stats"
 	"github.com/v2fly/v2ray-core/v4/proxy"
 	"github.com/v2fly/v2ray-core/v4/transport/internet"
 	"github.com/v2fly/v2ray-core/v4/transport/internet/tcp"
@@ -38,9 +38,9 @@ type tcpWorker struct {
 	recvOrigDest    bool
 	tag             string
 	dispatcher      routing.Dispatcher
-	sniffingConfig  *proxyman.SniffingConfig
-	uplinkCounter   stats.Counter
-	downlinkCounter stats.Counter
+// 	sniffingConfig  *proxyman.SniffingConfig
+// 	uplinkCounter   stats.Counter
+// 	downlinkCounter stats.Counter
 
 	hub internet.Listener
 
@@ -84,19 +84,19 @@ func (w *tcpWorker) callback(conn internet.Connection) {
 		Tag:     w.tag,
 	})
 	content := new(session.Content)
-	if w.sniffingConfig != nil {
-		content.SniffingRequest.Enabled = w.sniffingConfig.Enabled
-		content.SniffingRequest.OverrideDestinationForProtocol = w.sniffingConfig.DestinationOverride
-		content.SniffingRequest.MetadataOnly = w.sniffingConfig.MetadataOnly
-	}
+// 	if w.sniffingConfig != nil {
+// 		content.SniffingRequest.Enabled = w.sniffingConfig.Enabled
+// 		content.SniffingRequest.OverrideDestinationForProtocol = w.sniffingConfig.DestinationOverride
+// 		content.SniffingRequest.MetadataOnly = w.sniffingConfig.MetadataOnly
+// 	}
 	ctx = session.ContextWithContent(ctx, content)
-	if w.uplinkCounter != nil || w.downlinkCounter != nil {
-		conn = &internet.StatCouterConnection{
-			Connection:   conn,
-			ReadCounter:  w.uplinkCounter,
-			WriteCounter: w.downlinkCounter,
-		}
-	}
+// 	if w.uplinkCounter != nil || w.downlinkCounter != nil {
+// 		conn = &internet.StatCouterConnection{
+// 			Connection:   conn,
+// 			ReadCounter:  w.uplinkCounter,
+// 			WriteCounter: w.downlinkCounter,
+// 		}
+// 	}
 	if err := w.proxy.Process(ctx, net.Network_TCP, conn, w.dispatcher); err != nil {
 		newError("connection ends").Base(err).WriteToLog(session.ExportIDToError(ctx))
 	}
@@ -151,8 +151,8 @@ type udpConn struct {
 	remote           net.Addr
 	local            net.Addr
 	done             *done.Instance
-	uplink           stats.Counter
-	downlink         stats.Counter
+// 	uplink           stats.Counter
+// 	downlink         stats.Counter
 	inactive         bool
 }
 
@@ -172,9 +172,9 @@ func (c *udpConn) ReadMultiBuffer() (buf.MultiBuffer, error) {
 	}
 	c.updateActivity()
 
-	if c.uplink != nil {
-		c.uplink.Add(int64(mb.Len()))
-	}
+// 	if c.uplink != nil {
+// 		c.uplink.Add(int64(mb.Len()))
+// 	}
 
 	return mb, nil
 }
@@ -186,9 +186,9 @@ func (c *udpConn) Read(buf []byte) (int, error) {
 // Write implements io.Writer.
 func (c *udpConn) Write(buf []byte) (int, error) {
 	n, err := c.output(buf)
-	if c.downlink != nil {
-		c.downlink.Add(int64(n))
-	}
+// 	if c.downlink != nil {
+// 		c.downlink.Add(int64(n))
+// 	}
 	if err == nil {
 		c.updateActivity()
 	}
@@ -236,9 +236,9 @@ type udpWorker struct {
 	tag             string
 	stream          *internet.MemoryStreamConfig
 	dispatcher      routing.Dispatcher
-	sniffingConfig  *proxyman.SniffingConfig
-	uplinkCounter   stats.Counter
-	downlinkCounter stats.Counter
+// 	sniffingConfig  *proxyman.SniffingConfig
+// 	uplinkCounter   stats.Counter
+// 	downlinkCounter stats.Counter
 
 	checker    *task.Periodic
 	activeConn map[connID]*udpConn
@@ -270,8 +270,8 @@ func (w *udpWorker) getConnection(id connID) (*udpConn, bool) {
 			Port: int(w.port),
 		},
 		done:     done.New(),
-		uplink:   w.uplinkCounter,
-		downlink: w.downlinkCounter,
+// 		uplink:   w.uplinkCounter,
+// 		downlink: w.downlinkCounter,
 	}
 	w.activeConn[id] = conn
 
@@ -310,11 +310,11 @@ func (w *udpWorker) callback(b *buf.Buffer, source net.Destination, originalDest
 				Tag:     w.tag,
 			})
 			content := new(session.Content)
-			if w.sniffingConfig != nil {
-				content.SniffingRequest.Enabled = w.sniffingConfig.Enabled
-				content.SniffingRequest.OverrideDestinationForProtocol = w.sniffingConfig.DestinationOverride
-				content.SniffingRequest.MetadataOnly = w.sniffingConfig.MetadataOnly
-			}
+// 			if w.sniffingConfig != nil {
+// 				content.SniffingRequest.Enabled = w.sniffingConfig.Enabled
+// 				content.SniffingRequest.OverrideDestinationForProtocol = w.sniffingConfig.DestinationOverride
+// 				content.SniffingRequest.MetadataOnly = w.sniffingConfig.MetadataOnly
+// 			}
 			ctx = session.ContextWithContent(ctx, content)
 			if err := w.proxy.Process(ctx, net.Network_UDP, conn, w.dispatcher); err != nil {
 				newError("connection ends").Base(err).WriteToLog(session.ExportIDToError(ctx))
@@ -428,9 +428,9 @@ type dsWorker struct {
 	stream          *internet.MemoryStreamConfig
 	tag             string
 	dispatcher      routing.Dispatcher
-	sniffingConfig  *proxyman.SniffingConfig
-	uplinkCounter   stats.Counter
-	downlinkCounter stats.Counter
+// 	sniffingConfig  *proxyman.SniffingConfig
+// 	uplinkCounter   stats.Counter
+// 	downlinkCounter stats.Counter
 
 	hub internet.Listener
 
@@ -448,19 +448,19 @@ func (w *dsWorker) callback(conn internet.Connection) {
 		Tag:     w.tag,
 	})
 	content := new(session.Content)
-	if w.sniffingConfig != nil {
-		content.SniffingRequest.Enabled = w.sniffingConfig.Enabled
-		content.SniffingRequest.OverrideDestinationForProtocol = w.sniffingConfig.DestinationOverride
-		content.SniffingRequest.MetadataOnly = w.sniffingConfig.MetadataOnly
-	}
+// 	if w.sniffingConfig != nil {
+// 		content.SniffingRequest.Enabled = w.sniffingConfig.Enabled
+// 		content.SniffingRequest.OverrideDestinationForProtocol = w.sniffingConfig.DestinationOverride
+// 		content.SniffingRequest.MetadataOnly = w.sniffingConfig.MetadataOnly
+// 	}
 	ctx = session.ContextWithContent(ctx, content)
-	if w.uplinkCounter != nil || w.downlinkCounter != nil {
-		conn = &internet.StatCouterConnection{
-			Connection:   conn,
-			ReadCounter:  w.uplinkCounter,
-			WriteCounter: w.downlinkCounter,
-		}
-	}
+// 	if w.uplinkCounter != nil || w.downlinkCounter != nil {
+// 		conn = &internet.StatCouterConnection{
+// 			Connection:   conn,
+// 			ReadCounter:  w.uplinkCounter,
+// 			WriteCounter: w.downlinkCounter,
+// 		}
+// 	}
 	if err := w.proxy.Process(ctx, net.Network_UNIX, conn, w.dispatcher); err != nil {
 		newError("connection ends").Base(err).WriteToLog(session.ExportIDToError(ctx))
 	}

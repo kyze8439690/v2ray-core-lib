@@ -3,43 +3,43 @@ package inbound
 import (
 	"context"
 
-	core "github.com/v2fly/v2ray-core/v4"
+// 	core "github.com/v2fly/v2ray-core/v4"
 	"github.com/v2fly/v2ray-core/v4/app/proxyman"
 	"github.com/v2fly/v2ray-core/v4/common"
 	"github.com/v2fly/v2ray-core/v4/common/dice"
 	"github.com/v2fly/v2ray-core/v4/common/errors"
 	"github.com/v2fly/v2ray-core/v4/common/mux"
 	"github.com/v2fly/v2ray-core/v4/common/net"
-	"github.com/v2fly/v2ray-core/v4/features/policy"
-	"github.com/v2fly/v2ray-core/v4/features/stats"
+// 	"github.com/v2fly/v2ray-core/v4/features/policy"
+// 	"github.com/v2fly/v2ray-core/v4/features/stats"
 	"github.com/v2fly/v2ray-core/v4/proxy"
 	"github.com/v2fly/v2ray-core/v4/transport/internet"
 )
 
-func getStatCounter(v *core.Instance, tag string) (stats.Counter, stats.Counter) {
-	var uplinkCounter stats.Counter
-	var downlinkCounter stats.Counter
-
-	policy := v.GetFeature(policy.ManagerType()).(policy.Manager)
-	if len(tag) > 0 && policy.ForSystem().Stats.InboundUplink {
-		statsManager := v.GetFeature(stats.ManagerType()).(stats.Manager)
-		name := "inbound>>>" + tag + ">>>traffic>>>uplink"
-		c, _ := stats.GetOrRegisterCounter(statsManager, name)
-		if c != nil {
-			uplinkCounter = c
-		}
-	}
-	if len(tag) > 0 && policy.ForSystem().Stats.InboundDownlink {
-		statsManager := v.GetFeature(stats.ManagerType()).(stats.Manager)
-		name := "inbound>>>" + tag + ">>>traffic>>>downlink"
-		c, _ := stats.GetOrRegisterCounter(statsManager, name)
-		if c != nil {
-			downlinkCounter = c
-		}
-	}
-
-	return uplinkCounter, downlinkCounter
-}
+// func getStatCounter(v *core.Instance, tag string) (stats.Counter, stats.Counter) {
+// 	var uplinkCounter stats.Counter
+// 	var downlinkCounter stats.Counter
+//
+// 	policy := v.GetFeature(policy.ManagerType()).(policy.Manager)
+// 	if len(tag) > 0 && policy.ForSystem().Stats.InboundUplink {
+// 		statsManager := v.GetFeature(stats.ManagerType()).(stats.Manager)
+// 		name := "inbound>>>" + tag + ">>>traffic>>>uplink"
+// 		c, _ := stats.GetOrRegisterCounter(statsManager, name)
+// 		if c != nil {
+// 			uplinkCounter = c
+// 		}
+// 	}
+// 	if len(tag) > 0 && policy.ForSystem().Stats.InboundDownlink {
+// 		statsManager := v.GetFeature(stats.ManagerType()).(stats.Manager)
+// 		name := "inbound>>>" + tag + ">>>traffic>>>downlink"
+// 		c, _ := stats.GetOrRegisterCounter(statsManager, name)
+// 		if c != nil {
+// 			downlinkCounter = c
+// 		}
+// 	}
+//
+// 	return uplinkCounter, downlinkCounter
+// }
 
 type AlwaysOnInboundHandler struct {
 	proxy   proxy.Inbound
@@ -64,7 +64,7 @@ func NewAlwaysOnInboundHandler(ctx context.Context, tag string, receiverConfig *
 		tag:   tag,
 	}
 
-	uplinkCounter, downlinkCounter := getStatCounter(core.MustFromContext(ctx), tag)
+// 	uplinkCounter, downlinkCounter := getStatCounter(core.MustFromContext(ctx), tag)
 
 	nl := p.Network()
 	pr := receiverConfig.PortRange
@@ -97,9 +97,9 @@ func NewAlwaysOnInboundHandler(ctx context.Context, tag string, receiverConfig *
 				stream:          mss,
 				tag:             tag,
 				dispatcher:      h.mux,
-				sniffingConfig:  receiverConfig.GetEffectiveSniffingSettings(),
-				uplinkCounter:   uplinkCounter,
-				downlinkCounter: downlinkCounter,
+// 				sniffingConfig:  receiverConfig.GetEffectiveSniffingSettings(),
+// 				uplinkCounter:   uplinkCounter,
+// 				downlinkCounter: downlinkCounter,
 				ctx:             ctx,
 			}
 			h.workers = append(h.workers, worker)
@@ -118,9 +118,9 @@ func NewAlwaysOnInboundHandler(ctx context.Context, tag string, receiverConfig *
 					recvOrigDest:    receiverConfig.ReceiveOriginalDestination,
 					tag:             tag,
 					dispatcher:      h.mux,
-					sniffingConfig:  receiverConfig.GetEffectiveSniffingSettings(),
-					uplinkCounter:   uplinkCounter,
-					downlinkCounter: downlinkCounter,
+// 					sniffingConfig:  receiverConfig.GetEffectiveSniffingSettings(),
+// 					uplinkCounter:   uplinkCounter,
+// 					downlinkCounter: downlinkCounter,
 					ctx:             ctx,
 				}
 				h.workers = append(h.workers, worker)
@@ -134,9 +134,9 @@ func NewAlwaysOnInboundHandler(ctx context.Context, tag string, receiverConfig *
 					address:         address,
 					port:            net.Port(port),
 					dispatcher:      h.mux,
-					sniffingConfig:  receiverConfig.GetEffectiveSniffingSettings(),
-					uplinkCounter:   uplinkCounter,
-					downlinkCounter: downlinkCounter,
+// 					sniffingConfig:  receiverConfig.GetEffectiveSniffingSettings(),
+// 					uplinkCounter:   uplinkCounter,
+// 					downlinkCounter: downlinkCounter,
 					stream:          mss,
 				}
 				h.workers = append(h.workers, worker)

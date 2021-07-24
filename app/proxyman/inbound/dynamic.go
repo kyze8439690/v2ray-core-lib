@@ -114,7 +114,7 @@ func (h *DynamicInboundHandler) refresh() error {
 		address = net.AnyIP
 	}
 
-	uplinkCounter, downlinkCounter := getStatCounter(h.v, h.tag)
+// 	uplinkCounter, downlinkCounter := getStatCounter(h.v, h.tag)
 
 	for i := uint32(0); i < concurrency; i++ {
 		port := h.allocatePort()
@@ -134,9 +134,9 @@ func (h *DynamicInboundHandler) refresh() error {
 				stream:          h.streamSettings,
 				recvOrigDest:    h.receiverConfig.ReceiveOriginalDestination,
 				dispatcher:      h.mux,
-				sniffingConfig:  h.receiverConfig.GetEffectiveSniffingSettings(),
-				uplinkCounter:   uplinkCounter,
-				downlinkCounter: downlinkCounter,
+// 				sniffingConfig:  h.receiverConfig.GetEffectiveSniffingSettings(),
+// 				uplinkCounter:   uplinkCounter,
+// 				downlinkCounter: downlinkCounter,
 				ctx:             h.ctx,
 			}
 			if err := worker.Start(); err != nil {
@@ -154,9 +154,9 @@ func (h *DynamicInboundHandler) refresh() error {
 				address:         address,
 				port:            port,
 				dispatcher:      h.mux,
-				sniffingConfig:  h.receiverConfig.GetEffectiveSniffingSettings(),
-				uplinkCounter:   uplinkCounter,
-				downlinkCounter: downlinkCounter,
+// 				sniffingConfig:  h.receiverConfig.GetEffectiveSniffingSettings(),
+// 				uplinkCounter:   uplinkCounter,
+// 				downlinkCounter: downlinkCounter,
 				stream:          h.streamSettings,
 			}
 			if err := worker.Start(); err != nil {
