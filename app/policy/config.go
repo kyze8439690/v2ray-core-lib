@@ -70,10 +70,10 @@ func (p *Policy) ToCorePolicy() policy.Session {
 		cp.Timeouts.DownlinkOnly = p.Timeout.DownlinkOnly.Duration()
 		cp.Timeouts.UplinkOnly = p.Timeout.UplinkOnly.Duration()
 	}
-	if p.Stats != nil {
-		cp.Stats.UserUplink = p.Stats.UserUplink
-		cp.Stats.UserDownlink = p.Stats.UserDownlink
-	}
+// 	if p.Stats != nil {
+// 		cp.Stats.UserUplink = p.Stats.UserUplink
+// 		cp.Stats.UserDownlink = p.Stats.UserDownlink
+// 	}
 	if p.Buffer != nil {
 		cp.Buffer.PerConnection = p.Buffer.Connection
 	}
@@ -83,11 +83,11 @@ func (p *Policy) ToCorePolicy() policy.Session {
 // ToCorePolicy converts this SystemPolicy to policy.System.
 func (p *SystemPolicy) ToCorePolicy() policy.System {
 	return policy.System{
-		Stats: policy.SystemStats{
-			InboundUplink:    p.Stats.InboundUplink,
-			InboundDownlink:  p.Stats.InboundDownlink,
-			OutboundUplink:   p.Stats.OutboundUplink,
-			OutboundDownlink: p.Stats.OutboundDownlink,
-		},
+// 		Stats: policy.SystemStats{
+// 			InboundUplink:    p.Stats.InboundUplink,
+// 			InboundDownlink:  p.Stats.InboundDownlink,
+// 			OutboundUplink:   p.Stats.OutboundUplink,
+// 			OutboundDownlink: p.Stats.OutboundDownlink,
+// 		},
 	}
 }
