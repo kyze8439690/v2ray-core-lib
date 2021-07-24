@@ -9,7 +9,7 @@ import (
 	core "github.com/v2fly/v2ray-core/v4"
 	"github.com/v2fly/v2ray-core/v4/app/dispatcher"
 	"github.com/v2fly/v2ray-core/v4/app/proxyman"
-	"github.com/v2fly/v2ray-core/v4/app/stats"
+// 	"github.com/v2fly/v2ray-core/v4/app/stats"
 	"github.com/v2fly/v2ray-core/v4/common/serial"
 	"github.com/v2fly/v2ray-core/v4/infra/conf/cfgcommon"
 )
@@ -315,12 +315,12 @@ func (c *OutboundDetourConfig) Build() (*core.OutboundHandlerConfig, error) {
 	}, nil
 }
 
-type StatsConfig struct{}
+// type StatsConfig struct{}
 
 // Build implements Buildable.
-func (c *StatsConfig) Build() (*stats.Config, error) {
-	return &stats.Config{}, nil
-}
+// func (c *StatsConfig) Build() (*stats.Config, error) {
+// 	return &stats.Config{}, nil
+// }
 
 type Config struct {
 	// Port of this Point server.
