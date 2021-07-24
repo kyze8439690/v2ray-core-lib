@@ -8,11 +8,11 @@ import (
 	"github.com/v2fly/v2ray-core/v4/infra/conf/cfgcommon"
 	"github.com/v2fly/v2ray-core/v4/transport/internet/headers/http"
 	"github.com/v2fly/v2ray-core/v4/transport/internet/headers/noop"
-	"github.com/v2fly/v2ray-core/v4/transport/internet/headers/srtp"
-	"github.com/v2fly/v2ray-core/v4/transport/internet/headers/tls"
-	"github.com/v2fly/v2ray-core/v4/transport/internet/headers/utp"
-	"github.com/v2fly/v2ray-core/v4/transport/internet/headers/wechat"
-	"github.com/v2fly/v2ray-core/v4/transport/internet/headers/wireguard"
+// 	"github.com/v2fly/v2ray-core/v4/transport/internet/headers/srtp"
+// 	"github.com/v2fly/v2ray-core/v4/transport/internet/headers/tls"
+// 	"github.com/v2fly/v2ray-core/v4/transport/internet/headers/utp"
+// 	"github.com/v2fly/v2ray-core/v4/transport/internet/headers/wechat"
+// 	"github.com/v2fly/v2ray-core/v4/transport/internet/headers/wireguard"
 )
 
 type NoOpAuthenticator struct{}
@@ -27,35 +27,35 @@ func (NoOpConnectionAuthenticator) Build() (proto.Message, error) {
 	return new(noop.ConnectionConfig), nil
 }
 
-type SRTPAuthenticator struct{}
-
-func (SRTPAuthenticator) Build() (proto.Message, error) {
-	return new(srtp.Config), nil
-}
-
-type UTPAuthenticator struct{}
-
-func (UTPAuthenticator) Build() (proto.Message, error) {
-	return new(utp.Config), nil
-}
-
-type WechatVideoAuthenticator struct{}
-
-func (WechatVideoAuthenticator) Build() (proto.Message, error) {
-	return new(wechat.VideoConfig), nil
-}
-
-type WireguardAuthenticator struct{}
-
-func (WireguardAuthenticator) Build() (proto.Message, error) {
-	return new(wireguard.WireguardConfig), nil
-}
-
-type DTLSAuthenticator struct{}
-
-func (DTLSAuthenticator) Build() (proto.Message, error) {
-	return new(tls.PacketConfig), nil
-}
+// type SRTPAuthenticator struct{}
+//
+// func (SRTPAuthenticator) Build() (proto.Message, error) {
+// 	return new(srtp.Config), nil
+// }
+//
+// type UTPAuthenticator struct{}
+//
+// func (UTPAuthenticator) Build() (proto.Message, error) {
+// 	return new(utp.Config), nil
+// }
+//
+// type WechatVideoAuthenticator struct{}
+//
+// func (WechatVideoAuthenticator) Build() (proto.Message, error) {
+// 	return new(wechat.VideoConfig), nil
+// }
+//
+// type WireguardAuthenticator struct{}
+//
+// func (WireguardAuthenticator) Build() (proto.Message, error) {
+// 	return new(wireguard.WireguardConfig), nil
+// }
+//
+// type DTLSAuthenticator struct{}
+//
+// func (DTLSAuthenticator) Build() (proto.Message, error) {
+// 	return new(tls.PacketConfig), nil
+// }
 
 type AuthenticatorRequest struct {
 	Version string                           `json:"version"`

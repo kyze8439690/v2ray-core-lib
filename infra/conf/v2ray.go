@@ -16,28 +16,28 @@ import (
 
 var (
 	inboundConfigLoader = NewJSONConfigLoader(ConfigCreatorCache{
-		"dokodemo-door": func() interface{} { return new(DokodemoConfig) },
-		"http":          func() interface{} { return new(HTTPServerConfig) },
-		"shadowsocks":   func() interface{} { return new(ShadowsocksServerConfig) },
+// 		"dokodemo-door": func() interface{} { return new(DokodemoConfig) },
+// 		"http":          func() interface{} { return new(HTTPServerConfig) },
+// 		"shadowsocks":   func() interface{} { return new(ShadowsocksServerConfig) },
 		"socks":         func() interface{} { return new(SocksServerConfig) },
-		"vless":         func() interface{} { return new(VLessInboundConfig) },
-		"vmess":         func() interface{} { return new(VMessInboundConfig) },
-		"trojan":        func() interface{} { return new(TrojanServerConfig) },
-		"mtproto":       func() interface{} { return new(MTProtoServerConfig) },
+// 		"vless":         func() interface{} { return new(VLessInboundConfig) },
+// 		"vmess":         func() interface{} { return new(VMessInboundConfig) },
+// 		"trojan":        func() interface{} { return new(TrojanServerConfig) },
+// 		"mtproto":       func() interface{} { return new(MTProtoServerConfig) },
 	}, "protocol", "settings")
 
 	outboundConfigLoader = NewJSONConfigLoader(ConfigCreatorCache{
-		"blackhole":   func() interface{} { return new(BlackholeConfig) },
-		"freedom":     func() interface{} { return new(FreedomConfig) },
+// 		"blackhole":   func() interface{} { return new(BlackholeConfig) },
+// 		"freedom":     func() interface{} { return new(FreedomConfig) },
 		"http":        func() interface{} { return new(HTTPClientConfig) },
-		"shadowsocks": func() interface{} { return new(ShadowsocksClientConfig) },
+// 		"shadowsocks": func() interface{} { return new(ShadowsocksClientConfig) },
 		"socks":       func() interface{} { return new(SocksClientConfig) },
 		"vless":       func() interface{} { return new(VLessOutboundConfig) },
 		"vmess":       func() interface{} { return new(VMessOutboundConfig) },
 		"trojan":      func() interface{} { return new(TrojanClientConfig) },
-		"mtproto":     func() interface{} { return new(MTProtoClientConfig) },
-		"dns":         func() interface{} { return new(DNSOutboundConfig) },
-		"loopback":    func() interface{} { return new(LoopbackConfig) },
+// 		"mtproto":     func() interface{} { return new(MTProtoClientConfig) },
+// 		"dns":         func() interface{} { return new(DNSOutboundConfig) },
+// 		"loopback":    func() interface{} { return new(LoopbackConfig) },
 	}, "protocol", "settings")
 
 	ctllog = log.New(os.Stderr, "v2ctl> ", 0)
@@ -154,9 +154,9 @@ type InboundDetourConfig struct {
 	Settings       *json.RawMessage               `json:"settings"`
 	Tag            string                         `json:"tag"`
 	Allocation     *InboundDetourAllocationConfig `json:"allocate"`
-	StreamSetting  *StreamConfig                  `json:"streamSettings"`
-	DomainOverride *cfgcommon.StringList          `json:"domainOverride"`
-	SniffingConfig *SniffingConfig                `json:"sniffing"`
+// 	StreamSetting  *StreamConfig                  `json:"streamSettings"`
+// 	DomainOverride *cfgcommon.StringList          `json:"domainOverride"`
+// 	SniffingConfig *SniffingConfig                `json:"sniffing"`
 }
 
 // Build implements Buildable.
@@ -208,27 +208,27 @@ func (c *InboundDetourConfig) Build() (*core.InboundHandlerConfig, error) {
 		}
 		receiverSettings.AllocationStrategy = as
 	}
-	if c.StreamSetting != nil {
-		ss, err := c.StreamSetting.Build()
-		if err != nil {
-			return nil, err
-		}
-		receiverSettings.StreamSettings = ss
-	}
-	if c.SniffingConfig != nil {
-		s, err := c.SniffingConfig.Build()
-		if err != nil {
-			return nil, newError("failed to build sniffing config").Base(err)
-		}
-		receiverSettings.SniffingSettings = s
-	}
-	if c.DomainOverride != nil {
-		kp, err := toProtocolList(*c.DomainOverride)
-		if err != nil {
-			return nil, newError("failed to parse inbound detour config").Base(err)
-		}
-		receiverSettings.DomainOverride = kp
-	}
+// 	if c.StreamSetting != nil {
+// 		ss, err := c.StreamSetting.Build()
+// 		if err != nil {
+// 			return nil, err
+// 		}
+// 		receiverSettings.StreamSettings = ss
+// 	}
+// 	if c.SniffingConfig != nil {
+// 		s, err := c.SniffingConfig.Build()
+// 		if err != nil {
+// 			return nil, newError("failed to build sniffing config").Base(err)
+// 		}
+// 		receiverSettings.SniffingSettings = s
+// 	}
+// 	if c.DomainOverride != nil {
+// 		kp, err := toProtocolList(*c.DomainOverride)
+// 		if err != nil {
+// 			return nil, newError("failed to parse inbound detour config").Base(err)
+// 		}
+// 		receiverSettings.DomainOverride = kp
+// 	}
 
 	settings := []byte("{}")
 	if c.Settings != nil {
@@ -238,9 +238,9 @@ func (c *InboundDetourConfig) Build() (*core.InboundHandlerConfig, error) {
 	if err != nil {
 		return nil, newError("failed to load inbound detour config.").Base(err)
 	}
-	if dokodemoConfig, ok := rawConfig.(*DokodemoConfig); ok {
-		receiverSettings.ReceiveOriginalDestination = dokodemoConfig.Redirect
-	}
+// 	if dokodemoConfig, ok := rawConfig.(*DokodemoConfig); ok {
+// 		receiverSettings.ReceiveOriginalDestination = dokodemoConfig.Redirect
+// 	}
 	ts, err := rawConfig.(Buildable).Build()
 	if err != nil {
 		return nil, err
@@ -259,7 +259,7 @@ type OutboundDetourConfig struct {
 	Tag           string             `json:"tag"`
 	Settings      *json.RawMessage   `json:"settings"`
 	StreamSetting *StreamConfig      `json:"streamSettings"`
-	ProxySettings *ProxyConfig       `json:"proxySettings"`
+// 	ProxySettings *ProxyConfig       `json:"proxySettings"`
 	MuxSettings   *MuxConfig         `json:"mux"`
 }
 
@@ -283,13 +283,13 @@ func (c *OutboundDetourConfig) Build() (*core.OutboundHandlerConfig, error) {
 		senderSettings.StreamSettings = ss
 	}
 
-	if c.ProxySettings != nil {
-		ps, err := c.ProxySettings.Build()
-		if err != nil {
-			return nil, newError("invalid outbound detour proxy settings.").Base(err)
-		}
-		senderSettings.ProxySettings = ps
-	}
+// 	if c.ProxySettings != nil {
+// 		ps, err := c.ProxySettings.Build()
+// 		if err != nil {
+// 			return nil, newError("invalid outbound detour proxy settings.").Base(err)
+// 		}
+// 		senderSettings.ProxySettings = ps
+// 	}
 
 	if c.MuxSettings != nil {
 		senderSettings.MultiplexSettings = c.MuxSettings.Build()
@@ -330,35 +330,35 @@ type Config struct {
 
 	// Deprecated: InboundConfig exists for historical compatibility
 	// and should not be used.
-	InboundConfig *InboundDetourConfig `json:"inbound"`
+// 	InboundConfig *InboundDetourConfig `json:"inbound"`
 
 	// Deprecated: OutboundConfig exists for historical compatibility
 	// and should not be used.
-	OutboundConfig *OutboundDetourConfig `json:"outbound"`
+// 	OutboundConfig *OutboundDetourConfig `json:"outbound"`
 
 	// Deprecated: InboundDetours exists for historical compatibility
 	// and should not be used.
-	InboundDetours []InboundDetourConfig `json:"inboundDetour"`
+// 	InboundDetours []InboundDetourConfig `json:"inboundDetour"`
 
 	// Deprecated: OutboundDetours exists for historical compatibility
 	// and should not be used.
-	OutboundDetours []OutboundDetourConfig `json:"outboundDetour"`
+// 	OutboundDetours []OutboundDetourConfig `json:"outboundDetour"`
 
 	LogConfig        *LogConfig              `json:"log"`
 	RouterConfig     *RouterConfig           `json:"routing"`
-	DNSConfig        *DNSConfig              `json:"dns"`
+// 	DNSConfig        *DNSConfig              `json:"dns"`
 	InboundConfigs   []InboundDetourConfig   `json:"inbounds"`
 	OutboundConfigs  []OutboundDetourConfig  `json:"outbounds"`
-	Transport        *TransportConfig        `json:"transport"`
-	Policy           *PolicyConfig           `json:"policy"`
-	API              *APIConfig              `json:"api"`
-	Stats            *StatsConfig            `json:"stats"`
-	Reverse          *ReverseConfig          `json:"reverse"`
-	FakeDNS          *FakeDNSConfig          `json:"fakeDns"`
-	BrowserForwarder *BrowserForwarderConfig `json:"browserForwarder"`
-	Observatory      *ObservatoryConfig      `json:"observatory"`
+// 	Transport        *TransportConfig        `json:"transport"`
+// 	Policy           *PolicyConfig           `json:"policy"`
+// 	API              *APIConfig              `json:"api"`
+// 	Stats            *StatsConfig            `json:"stats"`
+// 	Reverse          *ReverseConfig          `json:"reverse"`
+// 	FakeDNS          *FakeDNSConfig          `json:"fakeDns"`
+// 	BrowserForwarder *BrowserForwarderConfig `json:"browserForwarder"`
+// 	Observatory      *ObservatoryConfig      `json:"observatory"`
 
-	Services map[string]*json.RawMessage `json:"services"`
+// 	Services map[string]*json.RawMessage `json:"services"`
 }
 
 func (c *Config) findInboundTag(tag string) int {
@@ -393,50 +393,50 @@ func (c *Config) Override(o *Config, fn string) {
 	if o.RouterConfig != nil {
 		c.RouterConfig = o.RouterConfig
 	}
-	if o.DNSConfig != nil {
-		c.DNSConfig = o.DNSConfig
-	}
-	if o.Transport != nil {
-		c.Transport = o.Transport
-	}
-	if o.Policy != nil {
-		c.Policy = o.Policy
-	}
-	if o.API != nil {
-		c.API = o.API
-	}
-	if o.Stats != nil {
-		c.Stats = o.Stats
-	}
-	if o.Reverse != nil {
-		c.Reverse = o.Reverse
-	}
-
-	if o.FakeDNS != nil {
-		c.FakeDNS = o.FakeDNS
-	}
-
-	if o.BrowserForwarder != nil {
-		c.BrowserForwarder = o.BrowserForwarder
-	}
-
-	if o.Observatory != nil {
-		c.Observatory = o.Observatory
-	}
-
-	// deprecated attrs... keep them for now
-	if o.InboundConfig != nil {
-		c.InboundConfig = o.InboundConfig
-	}
-	if o.OutboundConfig != nil {
-		c.OutboundConfig = o.OutboundConfig
-	}
-	if o.InboundDetours != nil {
-		c.InboundDetours = o.InboundDetours
-	}
-	if o.OutboundDetours != nil {
-		c.OutboundDetours = o.OutboundDetours
-	}
+// 	if o.DNSConfig != nil {
+// 		c.DNSConfig = o.DNSConfig
+// 	}
+// 	if o.Transport != nil {
+// 		c.Transport = o.Transport
+// 	}
+// 	if o.Policy != nil {
+// 		c.Policy = o.Policy
+// 	}
+// 	if o.API != nil {
+// 		c.API = o.API
+// 	}
+// 	if o.Stats != nil {
+// 		c.Stats = o.Stats
+// 	}
+// 	if o.Reverse != nil {
+// 		c.Reverse = o.Reverse
+// 	}
+//
+// 	if o.FakeDNS != nil {
+// 		c.FakeDNS = o.FakeDNS
+// 	}
+//
+// 	if o.BrowserForwarder != nil {
+// 		c.BrowserForwarder = o.BrowserForwarder
+// 	}
+//
+// 	if o.Observatory != nil {
+// 		c.Observatory = o.Observatory
+// 	}
+//
+//  // deprecated attrs... keep them for now
+// 	if o.InboundConfig != nil {
+// 		c.InboundConfig = o.InboundConfig
+// 	}
+// 	if o.OutboundConfig != nil {
+// 		c.OutboundConfig = o.OutboundConfig
+// 	}
+// 	if o.InboundDetours != nil {
+// 		c.InboundDetours = o.InboundDetours
+// 	}
+// 	if o.OutboundDetours != nil {
+// 		c.OutboundDetours = o.OutboundDetours
+// 	}
 	// deprecated attrs
 
 	// update the Inbound in slice if the only one in overide config has same tag
@@ -479,18 +479,18 @@ func applyTransportConfig(s *StreamConfig, t *TransportConfig) {
 	if s.TCPSettings == nil {
 		s.TCPSettings = t.TCPConfig
 	}
-	if s.KCPSettings == nil {
-		s.KCPSettings = t.KCPConfig
-	}
+// 	if s.KCPSettings == nil {
+// 		s.KCPSettings = t.KCPConfig
+// 	}
 	if s.WSSettings == nil {
 		s.WSSettings = t.WSConfig
 	}
 	if s.HTTPSettings == nil {
 		s.HTTPSettings = t.HTTPConfig
 	}
-	if s.DSSettings == nil {
-		s.DSSettings = t.DSConfig
-	}
+// 	if s.DSSettings == nil {
+// 		s.DSSettings = t.DSConfig
+// 	}
 }
 
 // Build implements Buildable.
@@ -507,21 +507,21 @@ func (c *Config) Build() (*core.Config, error) {
 		},
 	}
 
-	if c.API != nil {
-		apiConf, err := c.API.Build()
-		if err != nil {
-			return nil, err
-		}
-		config.App = append(config.App, serial.ToTypedMessage(apiConf))
-	}
-
-	if c.Stats != nil {
-		statsConf, err := c.Stats.Build()
-		if err != nil {
-			return nil, err
-		}
-		config.App = append(config.App, serial.ToTypedMessage(statsConf))
-	}
+// 	if c.API != nil {
+// 		apiConf, err := c.API.Build()
+// 		if err != nil {
+// 			return nil, err
+// 		}
+// 		config.App = append(config.App, serial.ToTypedMessage(apiConf))
+// 	}
+//
+// 	if c.Stats != nil {
+// 		statsConf, err := c.Stats.Build()
+// 		if err != nil {
+// 			return nil, err
+// 		}
+// 		config.App = append(config.App, serial.ToTypedMessage(statsConf))
+// 	}
 
 	var logConfMsg *serial.TypedMessage
 	if c.LogConfig != nil {
@@ -541,76 +541,76 @@ func (c *Config) Build() (*core.Config, error) {
 		config.App = append(config.App, serial.ToTypedMessage(routerConfig))
 	}
 
-	if c.DNSConfig != nil {
-		dnsApp, err := c.DNSConfig.Build()
-		if err != nil {
-			return nil, newError("failed to parse DNS config").Base(err)
-		}
-		config.App = append(config.App, serial.ToTypedMessage(dnsApp))
-	}
-
-	if c.Policy != nil {
-		pc, err := c.Policy.Build()
-		if err != nil {
-			return nil, err
-		}
-		config.App = append(config.App, serial.ToTypedMessage(pc))
-	}
-
-	if c.Reverse != nil {
-		r, err := c.Reverse.Build()
-		if err != nil {
-			return nil, err
-		}
-		config.App = append(config.App, serial.ToTypedMessage(r))
-	}
-
-	if c.FakeDNS != nil {
-		r, err := c.FakeDNS.Build()
-		if err != nil {
-			return nil, err
-		}
-		config.App = append(config.App, serial.ToTypedMessage(r))
-	}
-
-	if c.BrowserForwarder != nil {
-		r, err := c.BrowserForwarder.Build()
-		if err != nil {
-			return nil, err
-		}
-		config.App = append(config.App, serial.ToTypedMessage(r))
-	}
-
-	if c.Observatory != nil {
-		r, err := c.Observatory.Build()
-		if err != nil {
-			return nil, err
-		}
-		config.App = append(config.App, serial.ToTypedMessage(r))
-	}
+// 	if c.DNSConfig != nil {
+// 		dnsApp, err := c.DNSConfig.Build()
+// 		if err != nil {
+// 			return nil, newError("failed to parse DNS config").Base(err)
+// 		}
+// 		config.App = append(config.App, serial.ToTypedMessage(dnsApp))
+// 	}
+//
+// 	if c.Policy != nil {
+// 		pc, err := c.Policy.Build()
+// 		if err != nil {
+// 			return nil, err
+// 		}
+// 		config.App = append(config.App, serial.ToTypedMessage(pc))
+// 	}
+//
+// 	if c.Reverse != nil {
+// 		r, err := c.Reverse.Build()
+// 		if err != nil {
+// 			return nil, err
+// 		}
+// 		config.App = append(config.App, serial.ToTypedMessage(r))
+// 	}
+//
+// 	if c.FakeDNS != nil {
+// 		r, err := c.FakeDNS.Build()
+// 		if err != nil {
+// 			return nil, err
+// 		}
+// 		config.App = append(config.App, serial.ToTypedMessage(r))
+// 	}
+//
+// 	if c.BrowserForwarder != nil {
+// 		r, err := c.BrowserForwarder.Build()
+// 		if err != nil {
+// 			return nil, err
+// 		}
+// 		config.App = append(config.App, serial.ToTypedMessage(r))
+// 	}
+//
+// 	if c.Observatory != nil {
+// 		r, err := c.Observatory.Build()
+// 		if err != nil {
+// 			return nil, err
+// 		}
+// 		config.App = append(config.App, serial.ToTypedMessage(r))
+// 	}
 
 	// Load Additional Services that do not have a json translator
 
-	if msg, err := c.BuildServices(c.Services); err != nil {
-		developererr := newError("Loading a V2Ray Features as a service is intended for developers only. " +
-			"This is used for developers to prototype new features or for an advanced client to use special features in V2Ray," +
-			" instead of allowing end user to enable it without special tool and knowledge.")
-		sb := strings.Builder{}
-		return nil, newError("Cannot load service").Base(developererr).Base(err).Base(newError(sb.String()))
-	} else { // nolint: golint
-		// Using a else here is required to keep msg in scope
-		config.App = append(config.App, msg...)
-	}
+// 	if msg, err := c.BuildServices(c.Services); err != nil {
+// 		developererr := newError("Loading a V2Ray Features as a service is intended for developers only. " +
+// 			"This is used for developers to prototype new features or for an advanced client to use special features in V2Ray," +
+// 			" instead of allowing end user to enable it without special tool and knowledge.")
+// 		sb := strings.Builder{}
+// 		return nil, newError("Cannot load service").Base(developererr).Base(err).Base(newError(sb.String()))
+// 	} else { // nolint: golint
+// 		// Using a else here is required to keep msg in scope
+// 		config.App = append(config.App, msg...)
+// 	}
 
 	var inbounds []InboundDetourConfig
 
-	if c.InboundConfig != nil {
-		inbounds = append(inbounds, *c.InboundConfig)
-	}
-
-	if len(c.InboundDetours) > 0 {
-		inbounds = append(inbounds, c.InboundDetours...)
-	}
+// 	if c.InboundConfig != nil {
+// 		inbounds = append(inbounds, *c.InboundConfig)
+// 	}
+//
+// 	if len(c.InboundDetours) > 0 {
+// 		inbounds = append(inbounds, c.InboundDetours...)
+// 	}
 
 	if len(c.InboundConfigs) > 0 {
 		inbounds = append(inbounds, c.InboundConfigs...)
@@ -625,12 +625,12 @@ func (c *Config) Build() (*core.Config, error) {
 	}
 
 	for _, rawInboundConfig := range inbounds {
-		if c.Transport != nil {
-			if rawInboundConfig.StreamSetting == nil {
-				rawInboundConfig.StreamSetting = &StreamConfig{}
-			}
-			applyTransportConfig(rawInboundConfig.StreamSetting, c.Transport)
-		}
+// 		if c.Transport != nil {
+// 			if rawInboundConfig.StreamSetting == nil {
+// 				rawInboundConfig.StreamSetting = &StreamConfig{}
+// 			}
+// 			applyTransportConfig(rawInboundConfig.StreamSetting, c.Transport)
+// 		}
 		ic, err := rawInboundConfig.Build()
 		if err != nil {
 			return nil, err
@@ -640,25 +640,25 @@ func (c *Config) Build() (*core.Config, error) {
 
 	var outbounds []OutboundDetourConfig
 
-	if c.OutboundConfig != nil {
-		outbounds = append(outbounds, *c.OutboundConfig)
-	}
-
-	if len(c.OutboundDetours) > 0 {
-		outbounds = append(outbounds, c.OutboundDetours...)
-	}
+// 	if c.OutboundConfig != nil {
+// 		outbounds = append(outbounds, *c.OutboundConfig)
+// 	}
+//
+// 	if len(c.OutboundDetours) > 0 {
+// 		outbounds = append(outbounds, c.OutboundDetours...)
+// 	}
 
 	if len(c.OutboundConfigs) > 0 {
 		outbounds = append(outbounds, c.OutboundConfigs...)
 	}
 
 	for _, rawOutboundConfig := range outbounds {
-		if c.Transport != nil {
-			if rawOutboundConfig.StreamSetting == nil {
-				rawOutboundConfig.StreamSetting = &StreamConfig{}
-			}
-			applyTransportConfig(rawOutboundConfig.StreamSetting, c.Transport)
-		}
+// 		if c.Transport != nil {
+// 			if rawOutboundConfig.StreamSetting == nil {
+// 				rawOutboundConfig.StreamSetting = &StreamConfig{}
+// 			}
+// 			applyTransportConfig(rawOutboundConfig.StreamSetting, c.Transport)
+// 		}
 		oc, err := rawOutboundConfig.Build()
 		if err != nil {
 			return nil, err

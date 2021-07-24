@@ -6,9 +6,9 @@ import (
 	"strings"
 
 	"github.com/v2fly/v2ray-core/v4/app/router"
-	"github.com/v2fly/v2ray-core/v4/common/platform"
+// 	"github.com/v2fly/v2ray-core/v4/common/platform"
 	"github.com/v2fly/v2ray-core/v4/infra/conf/cfgcommon"
-	"github.com/v2fly/v2ray-core/v4/infra/conf/geodata"
+// 	"github.com/v2fly/v2ray-core/v4/infra/conf/geodata"
 	rule2 "github.com/v2fly/v2ray-core/v4/infra/conf/rule"
 )
 
@@ -89,15 +89,15 @@ func (c *RouterConfig) Build() (*router.Config, error) {
 
 	cfgctx := cfgcommon.NewConfigureLoadingContext(context.Background())
 
-	geoloadername := platform.NewEnvFlag("v2ray.conf.geoloader").GetValue(func() string {
-		return "standard"
-	})
+// 	geoloadername := platform.NewEnvFlag("v2ray.conf.geoloader").GetValue(func() string {
+// 		return "standard"
+// 	})
 
-	if loader, err := geodata.GetGeoDataLoader(geoloadername); err == nil {
-		cfgcommon.SetGeoDataLoader(cfgctx, loader)
-	} else {
-		return nil, newError("unable to create geo data loader ").Base(err)
-	}
+// 	if loader, err := geodata.GetGeoDataLoader(geoloadername); err == nil {
+// 		cfgcommon.SetGeoDataLoader(cfgctx, loader)
+// 	} else {
+// 		return nil, newError("unable to create geo data loader ").Base(err)
+// 	}
 
 	var rawRuleList []json.RawMessage
 	if c != nil {
