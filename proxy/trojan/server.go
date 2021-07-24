@@ -104,9 +104,9 @@ func (s *Server) Process(ctx context.Context, network net.Network, conn internet
 	sid := session.ExportIDToError(ctx)
 
 	iConn := conn
-	if statConn, ok := iConn.(*internet.StatCouterConnection); ok {
-		iConn = statConn.Connection
-	}
+// 	if statConn, ok := iConn.(*internet.StatCouterConnection); ok {
+// 		iConn = statConn.Connection
+// 	}
 
 	sessionPolicy := s.policyManager.ForLevel(0)
 	if err := conn.SetReadDeadline(time.Now().Add(sessionPolicy.Timeouts.Handshake)); err != nil {

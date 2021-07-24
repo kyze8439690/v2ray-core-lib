@@ -233,9 +233,9 @@ func setUpHTTPTunnel(ctx context.Context, dest net.Destination, target string, u
 	}
 
 	iConn := rawConn
-	if statConn, ok := iConn.(*internet.StatCouterConnection); ok {
-		iConn = statConn.Connection
-	}
+// 	if statConn, ok := iConn.(*internet.StatCouterConnection); ok {
+// 		iConn = statConn.Connection
+// 	}
 
 	nextProto := ""
 	if tlsConn, ok := iConn.(*tls.Conn); ok {

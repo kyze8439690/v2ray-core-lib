@@ -41,7 +41,7 @@ func (r *Router) Init(ctx context.Context, config *Config, d dns.Client, ohm out
 		if err != nil {
 			return err
 		}
-		balancer.InjectContext(ctx)
+// 		balancer.InjectContext(ctx)
 		r.balancers[rule.Tag] = balancer
 	}
 

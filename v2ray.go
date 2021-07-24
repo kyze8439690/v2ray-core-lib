@@ -16,7 +16,7 @@ import (
 	"github.com/v2fly/v2ray-core/v4/features/outbound"
 	"github.com/v2fly/v2ray-core/v4/features/policy"
 	"github.com/v2fly/v2ray-core/v4/features/routing"
-	"github.com/v2fly/v2ray-core/v4/features/stats"
+// 	"github.com/v2fly/v2ray-core/v4/features/stats"
 )
 
 // Server is an instance of V2Ray. At any time, there must be at most one Server instance running.
@@ -211,7 +211,7 @@ func initInstanceWithConfig(config *Config, server *Instance) (bool, error) {
 		{dns.ClientType(), localdns.New()},
 		{policy.ManagerType(), policy.DefaultManager{}},
 		{routing.RouterType(), routing.DefaultRouter{}},
-		{stats.ManagerType(), stats.NoopManager{}},
+// 		{stats.ManagerType(), stats.NoopManager{}},
 	}
 
 	for _, f := range essentialFeatures {
