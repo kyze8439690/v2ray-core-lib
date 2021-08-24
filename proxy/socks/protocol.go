@@ -442,13 +442,10 @@ func ClientHandshake(request *protocol.RequestHeader, reader io.Reader, writer i
 		common.Must2(b.WriteString(account.Username))
 		common.Must(b.WriteByte(byte(len(account.Password))))
 		common.Must2(b.WriteString(account.Password))
-	}
+        if err := buf.WriteAllBytes(writer, b.Bytes()); err != nil {
+            return nil, err
+        }
 
-	if err := buf.WriteAllBytes(writer, b.Bytes()); err != nil {
-        return nil, err
-    }
-
-	if authByte == authPassword {
 		b.Clear()
 		if _, err := b.ReadFullFrom(reader, 2); err != nil {
 			return nil, err
@@ -459,7 +456,6 @@ func ClientHandshake(request *protocol.RequestHeader, reader io.Reader, writer i
 	}
 
 	b.Clear()
-
 	command := byte(cmdTCPConnect)
 	if request.Command == protocol.RequestCommandUDP {
 		command = byte(cmdUDPAssociate)
