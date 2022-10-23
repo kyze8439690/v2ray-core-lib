@@ -68,7 +68,7 @@ func (d *DefaultSystemDialer) Dial(ctx context.Context, src net.Address, dest ne
 		goStdKeepAlive = time.Duration(-1)
 	}
 	dialer := &net.Dialer{
-		Timeout:   time.Second * 16,
+		Timeout:   time.Second * 5,
 		LocalAddr: resolveSrcAddr(dest.Network, src),
 		KeepAlive: goStdKeepAlive,
 	}
