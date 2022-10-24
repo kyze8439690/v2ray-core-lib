@@ -8,6 +8,7 @@ import (
 	"context"
 	"encoding/base64"
 	"io"
+    gonet "net"
 	"net/http"
 	"time"
 
@@ -53,7 +54,29 @@ func dialWebsocket(ctx context.Context, dest net.Destination, streamSettings *in
 
 	if config := tls.ConfigFromStreamSettings(streamSettings); config != nil {
 		protocol = "wss"
-		dialer.TLSClientConfig = config.GetTLSConfig(tls.WithDestination(dest), tls.WithNextProto("http/1.1"))
+		tlsConfig := config.GetTLSConfig(tls.WithDestination(dest), tls.WithNextProto("http/1.1"))
+        dialer.TLSClientConfig = tlsConfig
+        dialer.NetDialTLSContext = func(_ context.Context, _, addr string) (gonet.Conn, error) {
+            // Like the NetDial in the dialer
+            pconn, err := internet.DialSystem(ctx, dest, streamSettings.SocketSettings)
+            if err != nil {
+                newError("failed to dial to " + addr).Base(err).AtError().WriteToLog()
+                return nil, err
+            }
+            // TLS and apply the handshake
+            cn := tls.UClient(pconn, tlsConfig).(*tls.UConn)
+            if err := cn.WebsocketHandshake(); err != nil {
+                newError("failed to dial to " + addr).Base(err).AtError().WriteToLog()
+                return nil, err
+            }
+            if !tlsConfig.InsecureSkipVerify {
+                if err := cn.VerifyHostname(tlsConfig.ServerName); err != nil {
+                    newError("failed to dial to " + addr).Base(err).AtError().WriteToLog()
+                    return nil, err
+                }
+            }
+            return cn, nil
+        }
 	}
 
 	host := dest.NetAddr()

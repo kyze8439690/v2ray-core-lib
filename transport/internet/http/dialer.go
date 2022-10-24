@@ -67,7 +67,7 @@ func getHTTPClient(ctx context.Context, dest net.Destination, tlsSettings *tls.C
 				return nil, err
 			}
 
-			cn := gotls.Client(pconn, tlsConfig)
+			var cn = tls.UClient(pconn, tlsConfig).(*tls.UConn)
 			if err := cn.Handshake(); err != nil {
 				return nil, err
 			}
@@ -76,10 +76,13 @@ func getHTTPClient(ctx context.Context, dest net.Destination, tlsSettings *tls.C
 					return nil, err
 				}
 			}
-			state := cn.ConnectionState()
-			if p := state.NegotiatedProtocol; p != http2.NextProtoTLS {
-				return nil, newError("http2: unexpected ALPN protocol " + p + "; want q" + http2.NextProtoTLS).AtError()
+			negotiatedProtocol, negotiatedProtocolIsMutual := cn.NegotiatedProtocol()
+            if negotiatedProtocol != http2.NextProtoTLS {
+                return nil, newError("http2: unexpected ALPN protocol " + negotiatedProtocol + "; want q" + http2.NextProtoTLS).AtError()
 			}
+			if !negotiatedProtocolIsMutual {
+                return nil, newError("http2: could not negotiate protocol mutually").AtError()
+            }
 			return cn, nil
 		},
 		TLSClientConfig: tlsSettings.GetTLSConfig(tls.WithDestination(dest)),
