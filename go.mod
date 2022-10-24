@@ -1,6 +1,6 @@
 module github.com/v2fly/v2ray-core/v4
 
-go 1.17
+go 1.19
 
 require (
 	github.com/golang/mock v1.6.0
