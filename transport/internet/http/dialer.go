@@ -67,7 +67,12 @@ func getHTTPClient(ctx context.Context, dest net.Destination, tlsSettings *tls.C
 				return nil, err
 			}
 
-			var cn = tls.UClient(pconn, tlsConfig).(*tls.UConn)
+			var cn tls.Interface
+			if tlsSettings.UseUtls {
+				cn = tls.UClient(pconn, tlsConfig).(*tls.UConn)
+			} else {
+				cn = tls.Client(pconn, tlsConfig).(*tls.Conn)
+			}
 			if err := cn.Handshake(); err != nil {
 				return nil, err
 			}

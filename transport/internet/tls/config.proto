@@ -52,4 +52,6 @@ message Config {
 
   // If true, the client is required to present a certificate.
   bool verify_client_certificate = 8;
+
+  bool use_utls = 9;
 }

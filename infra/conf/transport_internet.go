@@ -321,6 +321,7 @@ type TLSConfig struct {
 	DisableSystemRoot                bool                  `json:"disableSystemRoot"`
 	PinnedPeerCertificateChainSha256 *[]string             `json:"pinnedPeerCertificateChainSha256"`
 	VerifyClientCertificate          bool                  `json:"verifyClientCertificate"`
+	UseUtls                          bool                  `json:"useUtls"`
 }
 
 // Build implements Buildable.
@@ -337,6 +338,7 @@ func (c *TLSConfig) Build() (proto.Message, error) {
 	serverName := c.ServerName
 	config.AllowInsecure = c.Insecure
 	config.VerifyClientCertificate = c.VerifyClientCertificate
+	config.UseUtls = c.UseUtls
 	if len(c.ServerName) > 0 {
 		config.ServerName = serverName
 	}

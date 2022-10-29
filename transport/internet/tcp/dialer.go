@@ -23,10 +23,14 @@ func Dial(ctx context.Context, dest net.Destination, streamSettings *internet.Me
 
 	if config := tls.ConfigFromStreamSettings(streamSettings); config != nil {
 		tlsConfig := config.GetTLSConfig(tls.WithDestination(dest))
-		conn = tls.UClient(conn, tlsConfig)
-		if err := conn.(*tls.UConn).Handshake(); err != nil {
-            return nil, err
-        }
+		if config.UseUtls {
+			conn = tls.UClient(conn, tlsConfig)
+			if err := conn.(*tls.UConn).Handshake(); err != nil {
+				return nil, err
+			}
+		} else {
+			conn = tls.Client(conn, tlsConfig)
+		}
 	}
 
 	tcpSettings := streamSettings.ProtocolSettings.(*Config)
